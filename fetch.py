@@ -2,7 +2,7 @@
 from Bio import Entrez
 from Bio import SeqIO
 
-# Function to take list of accessions and download the data from Entrez
+##Function to take list of accessions and download the data from Entrez
 # Function to convert that .gb file to a custom FASTA file.
 # Modified from: http://www.biopython.org/wiki/BioSQL
 # and Julius Lucks' script
