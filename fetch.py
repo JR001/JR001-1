@@ -52,7 +52,7 @@ def parse_gb_to_FASTA(accession_list, fasta_filename):   #parse each of the file
 		parsed = [ ] #this could be used to return everything that was passed
 		for line in open(accession_list):	#read each line one by one of the input file, loop through them until end of file
 			if not line.startswith("#"):
-				line = line.partition('# ')[0]  # Comments start with a space#
+				line = line.partition(' #')[0]  # Comments start with a space#
 				
 				#this effectively ignores anything after a hash on each line, 
 				#allowing comments to be added to the text file at the beginning of lines or after accesssion numbers
@@ -82,7 +82,6 @@ def parse_gb_to_FASTA(accession_list, fasta_filename):   #parse each of the file
 			print "%s" % line	#Print all lines and comments in the file, so help you see what's going on
 			
 		#print 'FASTA file saved to:\n%s\n' % fasta_filename 
-		line.close()
 	except IOError:
 		print 'Is the file %s downloaded and have you checked what is inside it?  Maybe tiy got the accesssion number wrong? I am quitting' % line
 		quit()
@@ -141,10 +140,11 @@ handle.close()
 #
 import fetch
 #fetch.download('/Users/johncumbers/Desktop/41_Chro_gb/41Chro_accessions.txt')
-fetch.download('/Users/johncumbers/Desktop/41_Chro_gb/outgroup_sequences.txt')
+#fetch.download('/Users/johncumbers/Desktop/41_Chro_gb/outgroup_sequences.txt')
 
 
 #fetch.parse_gb_to_FASTA('/Users/johncumbers/Desktop/41_Chro_gb/41Chro_accessions.txt', '/Users/johncumbers/Desktop/41_Chro_gb/41Chro_accessions.FASTA')
-#fetch.parse_gb_to_FASTA('/Users/johncumbers/Desktop/41_Chro_gb/Chro_16s_ends_intact_with_outgroups.txt', '/Users/johncumbers/Desktop/41_Chro_gb/Chro_16s_ends_intact_with_outgroups.FASTA')
+fetch.parse_gb_to_FASTA('/Users/johncumbers/Desktop/41_Chro_gb/Chro_16s_ends_intact_with_outgroups.txt', '/Users/johncumbers/Desktop/41_Chro_gb/Chro_16s_ends_intact_with_outgroups.FASTA')
+
 
 
