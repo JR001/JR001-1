@@ -3,6 +3,7 @@ from Bio import Entrez
 from Bio import SeqIO
 
 ##Function to take list of accessions and download the data from Entrez
+# Function to take list of accessions and download the data from Entrez
 # Function to convert that .gb file to a custom FASTA file.
 # Modified from: http://www.biopython.org/wiki/BioSQL
 # and Julius Lucks' script
@@ -18,22 +19,32 @@ from Bio import SeqIO
 
 # Things to do: add some feedback to this instruction, print out as each one is downloaded
 def download(accession_list):  #download each from genbank, save each as a .gb file in current dir
-	
-	for line in open(accession_list):  # opened in text-mode; all EOLs are converted to '\n'
-		if not line.startswith("#"):  #see below for details of partition function and what it does to deal with #commenting
-			line = line.partition(' #')[0]  # comments start with a space#
-			line = line.rstrip('\n')
-			handle = Entrez.efetch(db="nuccore", id=line, rettype="gb")
-			genbank_string = handle.read()
-			gb_file_name = line+'.gb'
-			f = open(gb_file_name, 'w')
-			f.write(genbank_string)
-			print "Created file named %s" % gb_file_name
-################				f.write('//\n')  #not sure why/if we want to include this Genbank separator but Julius did
-			f.close()
+	try:
+		for line in open(accession_list):  # opened in text-mode; all EOLs are converted to '\n'
+			try:
+				if not line.startswith("#"):  #see below for details of partition function and what it does to deal with #commenting
+					line = line.partition(' #')[0]  # comments start with a space#
+					line = line.rstrip('\n')
+					handle = Entrez.efetch(db="nuccore", id=line, rettype="gb")
+					genbank_string = handle.read()
+					gb_file_name = line+'.gb'
+					f = open(gb_file_name, 'w')
+					f.write(genbank_string)
+					print "Created file named %s" % gb_file_name
+	#################				f.write('//\n')  #not sure why/if we want to include this Genbank separator but Julius did
+					f.close()
+			except IOError:
+				print 'Network error, are you connected to the internet?'
+				quit()
+				raise
+	except IOError:
+		print 'something wrong with the input file? Please check the spelling and location'
+		quit()
+		raise
 
 
-
+#WARNING: if there is a wrong accession number then the program will not tell you about it, and just download a blank file
+#You'll only know after you try and parse the file with the parse function.
 def parse_gb_to_FASTA(accession_list, fasta_filename):   #parse each of the files you just  
 #downloaded and outputs them in a customized FASTA file format.
 	output_handle = open(fasta_filename, "w")  #setup the FASTA output file
