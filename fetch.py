@@ -1,6 +1,7 @@
 #!/usr/local/bin/python
 from Bio import Entrez
 from Bio import SeqIO
+import Bio.Align.Applications  #for dealing with Muscle command line calls 
 
 ##Function to take list of accessions and download the data from Entrez
 # Function to take list of accessions and download the data from Entrez
@@ -8,15 +9,22 @@ from Bio import SeqIO
 # Modified from: http://www.biopython.org/wiki/BioSQL
 # and Julius Lucks' script
 
-
 #Notes on usage.  To run it, use the two functions at the very bottom.
 #If you are downloading new files from Genbank, then use fetch.download, give it a list of accession numbers in a text file, one line per numbers
 #If you are parsing a Genbank file and creating a FASTA file, use fetch.parse_gb_to_FASTA and give it
 #your accession list and the output file name. (you must have already downloaded these using download, and run it in the same dir)
 #however, the lists do not have to be the same, or in the same order
 
+############# set your file name and dir here, this is the only one you need to change, rest are based on that.
+filename_base = "/Users/johncumbers/Desktop/41_Chro_gb/Chro_accessions_3prime_intact"  # name and loc of your input accesssion number list this.txt
+#############
+# no need to touch these below:
+input_file_name_list_of_accession_numbers = "%s.txt" % filename_base 
+output_file_name_FASTA = "output_%s.FASTA" % filename_base
+output_file_name_FASTA_aligned =  "output_%s.FASTA.aligned" % filename_base
 
 
+#
 # Things to do: add some feedback to this instruction, print out as each one is downloaded
 def download(accession_list):  #download each from genbank, save each as a .gb file in current dir
 	try:
@@ -88,35 +96,6 @@ def parse_gb_to_FASTA(accession_list, fasta_filename):   #parse each of the file
 		raise
 
 
-#NOT USED, but borrowed from.
-'''
-	def parse(accession_list):  #parse each of the files you just downloaded
-		parsed = [ ]
-		for line in open(accession_list):  # opened in text-mode; all EOLs are converted to '\n'
-			line = line.rstrip('\n')
-			gb_file_name = line + '.gb'
-	#		print 'Parsing ... ',line
-			try:
-				gb_file = file(gb_file_name,'r')
-			except IOError:
-				print 'Is the file %s downloaded?' % gb_file_name
-				raise
-							# The Bio.SeqIO.parse method can parse a variety of formats. 
-							# Here we use it to parse the GenBank files on our local disk using 
-							# the "genbank" format parameter. The method returns a generator,
-							# who's next() method is used to retrieve an object representing the parsed file.
-			gb_parsed_record = SeqIO.parse(gb_file,"genbank").next() 
-			gb_file.close()
-							# The object representing the parsed GenBank file has a 
-							# variety of methods to extract the record id and sequence	
-			print gb_parsed_record.id
-			print gb_parsed_record.seq
-							# The genbank.parse method returns a listed of parsed objects,
-							# one for each input sequence file.
-			parsed.append(gb_parsed_record)
-
-		return parsed
-'''
 	
 ''' #NOT USED
 handle = Entrez.efetch(db="nuccore", id="6273291,6273290,6273289", rettype="gb")
@@ -137,14 +116,18 @@ handle.close()
 
 #  Use these parts here just add your file names in place.
 #  run in TextMate etc.  with command + R.
+#  Comment or uncomment the parts you want to run.
 #
-import fetch
+#import fetch  # no need to do this if you are running it from within.
 #fetch.download('/Users/johncumbers/Desktop/41_Chro_gb/41Chro_accessions.txt')
 #fetch.download('/Users/johncumbers/Desktop/41_Chro_gb/outgroup_sequences.txt')
 
 
 #fetch.parse_gb_to_FASTA('/Users/johncumbers/Desktop/41_Chro_gb/41Chro_accessions.txt', '/Users/johncumbers/Desktop/41_Chro_gb/41Chro_accessions.FASTA')
-fetch.parse_gb_to_FASTA('/Users/johncumbers/Desktop/41_Chro_gb/Chro_16s_ends_intact_with_outgroups.txt', '/Users/johncumbers/Desktop/41_Chro_gb/Chro_16s_ends_intact_with_outgroups.FASTA')
+#fetch.
+#parse_gb_to_FASTA('/Users/johncumbers/Desktop/41_Chro_gb/Chro_16s_ends_intact_with_outgroups.txt', '/Users/johncumbers/Desktop/41_Chro_gb/Chro_16s_ends_intact_with_outgroups.FASTA')
 
+#parse_gb_to_FASTA('input_file_name_list_of_accession_numbers', '/Users/johncumbers/Desktop/41_Chro_gb/Chro_accessions_3prime_intact.FASTA')
+parse_gb_to_FASTA('/Users/johncumbers/Desktop/41_Chro_gb/Chro_accessions_5prime_intact.txt', 'output_file_name_FASTA')
 
 
